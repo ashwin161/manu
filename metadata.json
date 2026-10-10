@@ -1,0 +1,6 @@
+{
+  "name": "Manu",
+  "description": "Tanglish to Official Tamil Petition Generator",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

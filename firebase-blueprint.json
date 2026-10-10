@@ -1,0 +1,49 @@
+{
+  "entities": {
+    "Petition": {
+      "title": "Petition",
+      "description": "User grievance petition generated from Tanglish into Tamil and English",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "ID of the user who created this petition"
+        },
+        "department": {
+          "type": "string",
+          "description": "Target Tamil Nadu department"
+        },
+        "tanglishInput": {
+          "type": "string",
+          "description": "Informal Tanglish complaint text"
+        },
+        "tamilOutput": {
+          "type": "object",
+          "description": "Formal Tamil petition content"
+        },
+        "englishOutput": {
+          "type": "object",
+          "description": "Formal English letter content"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Creation timestamp"
+        }
+      },
+      "required": [
+        "userId",
+        "department",
+        "tanglishInput",
+        "tamilOutput",
+        "englishOutput"
+      ]
+    }
+  },
+  "firestore": {
+    "/petitions/{petitionId}": {
+      "schema": "Petition",
+      "description": "Collection of user petitions"
+    }
+  }
+}
