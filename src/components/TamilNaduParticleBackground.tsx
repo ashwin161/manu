@@ -220,26 +220,16 @@ export const TamilNaduParticleBackground: React.FC = () => {
     window.addEventListener('mouseleave', handleMouseLeave);
 
     // Main animation loop
-    let morphFactor = 0; // 0 = ambient drifting, 1 = full Tamil Nadu emblem formation
-
     const render = () => {
       ctx.clearRect(0, 0, width, height);
 
       const now = Date.now();
       const timeSinceMouse = now - mouseRef.current.lastMoved;
-      // Active if locked OR recently moved mouse (within 5.5 seconds)
-      const shouldFormLogo = isLocked || (mouseRef.current.active && timeSinceMouse < 5500);
+      const shouldStayActive = isLocked || (mouseRef.current.active && timeSinceMouse < 5500);
 
-      // Smoothly animate morph factor
-      if (shouldFormLogo) {
-        morphFactor += (1 - morphFactor) * 0.05;
-        if (!isInteracting && morphFactor > 0.05) setIsInteracting(true);
-      } else {
-        morphFactor += (0 - morphFactor) * 0.025;
-        if (isInteracting && morphFactor < 0.05) setIsInteracting(false);
-      }
+      if (shouldStayActive && !isInteracting) setIsInteracting(true);
+      if (!shouldStayActive && isInteracting) setIsInteracting(false);
 
-      // Responsive emblem radius: scales elegantly on laptop, tablet, or monitor
       const emblemRadius = Math.min(width, height) * 0.38;
       const centerX = width / 2;
       const centerY = height / 2;
@@ -248,83 +238,61 @@ export const TamilNaduParticleBackground: React.FC = () => {
         const p = particles[i];
         const targetPt = logoPoints[i];
 
-        // Logo coordinate mapped to screen
         const logoScreenX = centerX + targetPt.x * emblemRadius;
         const logoScreenY = centerY + targetPt.y * emblemRadius;
 
-        // Ambient drifting motion
-        p.angle += p.speed;
-        p.baseX += p.vx + Math.sin(p.angle) * 0.35;
-        p.baseY += p.vy + Math.cos(p.angle) * 0.35;
-
-        // Wrap around borders in ambient mode
-        if (p.baseX < 0) p.baseX = width;
-        if (p.baseX > width) p.baseX = 0;
-        if (p.baseY < 0) p.baseY = height;
-        if (p.baseY > height) p.baseY = 0;
-
-        // Interpolate between ambient floating position and TN Logo formation
-        const destX = p.baseX * (1 - morphFactor) + logoScreenX * morphFactor;
-        const destY = p.baseY * (1 - morphFactor) + logoScreenY * morphFactor;
-
-        // Interactive mouse magnetic ripple when close
         let mouseDisplaceX = 0;
         let mouseDisplaceY = 0;
         if (mouseRef.current.active) {
-          const dx = destX - mouseRef.current.x;
-          const dy = destY - mouseRef.current.y;
+          const dx = logoScreenX - mouseRef.current.x;
+          const dy = logoScreenY - mouseRef.current.y;
           const dist = Math.hypot(dx, dy);
-          const maxDist = 140;
+          const maxDist = 150;
           if (dist < maxDist && dist > 0) {
-            const force = (1 - dist / maxDist) * 35;
+            const force = (1 - dist / maxDist) * 22;
             mouseDisplaceX = (dx / dist) * force;
             mouseDisplaceY = (dy / dist) * force;
           }
         }
 
-        // Smooth physics towards destination
-        p.x += (destX + mouseDisplaceX - p.x) * 0.12;
-        p.y += (destY + mouseDisplaceY - p.y) * 0.12;
+        const targetX = logoScreenX + mouseDisplaceX;
+        const targetY = logoScreenY + mouseDisplaceY;
 
-        // Alpha and crispness
-        const currentAlpha = p.baseAlpha * (1 - morphFactor) + (0.92 + Math.sin(p.angle * 2) * 0.08) * morphFactor;
+        p.x += (targetX - p.x) * 0.14;
+        p.y += (targetY - p.y) * 0.14;
 
-        // Draw particle
+        const alpha = mouseRef.current.active ? 0.9 : 0.78;
+
         ctx.save();
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size * (1 + morphFactor * 0.35), 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
         ctx.fillStyle = p.color;
-        ctx.globalAlpha = currentAlpha;
+        ctx.globalAlpha = alpha;
         ctx.shadowColor = p.color;
-        ctx.shadowBlur = morphFactor > 0.4 ? 10 : 3;
+        ctx.shadowBlur = mouseRef.current.active ? 10 : 4;
         ctx.fill();
         ctx.restore();
       }
 
-      // Draw subtle connecting constellation lines between nearby particles when emblem is formed
-      if (morphFactor > 0.55) {
-        ctx.save();
-        ctx.lineWidth = 0.7;
-        const maxLinkDist = emblemRadius * 0.11;
-        const lineAlpha = (morphFactor - 0.55) * 0.55;
-        ctx.globalAlpha = lineAlpha;
+      ctx.save();
+      ctx.lineWidth = 0.7;
+      ctx.globalAlpha = mouseRef.current.active ? 0.28 : 0.12;
 
-        for (let i = 0; i < particleCount; i += 3) {
-          const p1 = particles[i];
-          for (let j = i + 1; j < Math.min(i + 15, particleCount); j++) {
-            const p2 = particles[j];
-            const dist = Math.hypot(p1.x - p2.x, p1.y - p2.y);
-            if (dist < maxLinkDist) {
-              ctx.strokeStyle = p1.color;
-              ctx.beginPath();
-              ctx.moveTo(p1.x, p1.y);
-              ctx.lineTo(p2.x, p2.y);
-              ctx.stroke();
-            }
+      for (let i = 0; i < particleCount; i += 3) {
+        const p1 = particles[i];
+        for (let j = i + 1; j < Math.min(i + 14, particleCount); j++) {
+          const p2 = particles[j];
+          const dist = Math.hypot(p1.x - p2.x, p1.y - p2.y);
+          if (dist < emblemRadius * 0.11) {
+            ctx.strokeStyle = p1.color;
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.stroke();
           }
         }
-        ctx.restore();
       }
+      ctx.restore();
 
       animationFrameId = requestAnimationFrame(render);
     };
@@ -365,15 +333,15 @@ export const TamilNaduParticleBackground: React.FC = () => {
               ? 'bg-emerald-900/90 text-white border-emerald-400 shadow-emerald-900/40 scale-105'
               : 'bg-white/85 text-slate-800 border-emerald-300 hover:border-emerald-500 hover:bg-white shadow-sm'
           }`}
-          title="Move your mouse anywhere or click to assemble the particles into the Tamil Nadu Government Emblem"
+          title="Hover near the emblem for a subtle interaction effect"
         >
           <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse" />
           <span>
             {isLocked
               ? 'தமிழ்நாடு சின்னம் வடிவம் (Locked)'
               : isInteracting
-              ? 'தமிழ்நாடு அரசு சின்னம் (Active)'
-              : 'நகர்த்தினால் தமிழ்நாடு சின்னம் தோன்றும் (Move mouse to form logo)'}
+              ? 'தமிழ்நாடு அரசு சின்னம் (Hover active)'
+              : 'ஹோவர் செய்தால் தமிழ்நாடு சின்னம்反応ப்படும் (Hover to react)'}
           </span>
         </button>
       </div>
