@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 export type Language = 'en' | 'ta';
 
@@ -11,146 +11,274 @@ interface LanguageContextType {
 
 const translations: Record<Language, Record<string, string>> = {
   en: {
-    // Brand & Header
-    brandTitle: "Manu",
-    brandSubtitle: "Tamil Nadu Civic Drafting",
-    home: "Home",
-    dashboard: "My Petitions",
-    newPetition: "New Petition",
-    login: "Citizen Login",
-    signup: "Register",
-    logout: "Sign Out",
-    demoLogin: "Demo Citizen",
-
-    // Hero & Landing
-    heroBadge: "Tamil Nadu Secretariat & Collectorate Aligned • Gemini 3.8 Flash",
-    heroTitlePart1: "Speak Tanglish.",
-    heroTitlePart2: "Get Court-Ready Tamil Petitions.",
-    heroSubtitle: "Speak or type your local issues casually in Tanglish. We turn them into formal administrative petitions with official TN Secretariat references and dual English letters.",
-    startPetitionBtn: "Draft Your Petition Now",
-    exploreDeptsBtn: "Explore 42+ TN Departments",
-    districtsBadge: "All 38 TN Districts",
-    dualFormatBadge: "Dual Format (தமிழ் & English)",
-    eSevaiBadge: "CM Cell & Collectorate Ready",
+    // App & Identity
+    appName: "Manu",
+    appTamilName: "மனு",
+    appTagline: "Citizen Petition Assistant",
+    govHeader: "Government of Tamil Nadu",
+    govTamilHeader: "தமிழ்நாடு அரசு",
+    taglineSubtitle: "Create • Verify • Generate • Submit",
+    getStarted: "Get Started",
+    continueWithGoogle: "Continue with Google",
+    guestMode: "Continue as Citizen Guest",
+    loginSubtitle: "Sign in securely to manage your local petition records and autofill your identity.",
     
-    // Live Sample
-    liveSampleTitle: "Live Tanglish Transformation",
-    interactiveSample: "Interactive Demo",
-    spokenTanglishHeader: "Spoken Informal Tanglish (Voice / Text)",
-    aiBridgeLabel: "Instant Tamil Nadu Legal Drafting",
-    outputCardTitle: "Official Secretariat Grievance Petition",
-    viewFullA4Btn: "View Full A4 Sheet",
+    // Location Permission
+    locationTitle: "Locality Permission",
+    locationDesc: "Your location helps us identify your district and taluk to recommend the exact jurisdiction and administrative officers.",
+    allowLocationBtn: "Enable Location Detection",
+    skipLocationBtn: "Enter Manually",
+    detectingLocation: "Detecting your locality in Tamil Nadu...",
+    locationDetected: "Location detected",
+    locationManualNotice: "Location permission denied. You can manually select your district anytime.",
 
-    // Departments
-    readyDepartmentsTitle: "Popular Departments",
-    viewAllDepts: "View All Departments",
-    
-    // Create Workspace
-    workspaceTitle: "Court-Ready Petition Workspace",
-    workspaceSubtitle: "Transform colloquial grievance into an official administrative letterhead",
-    applicantDetails: "Applicant & Grievance Details",
-    applicantNameLabel: "Applicant Full Name",
-    phoneLabel: "Mobile Number",
-    districtLabel: "Select District",
-    deptLabel: "Select Department",
-    addressLabel: "Residential Address (Street, Taluk, District - PIN)",
-    tanglishInputLabel: "Tanglish Issue Description",
-    voiceDictationLabel: "Voice Dictation",
-    quickScenariosLabel: "Quick 1-Click Tanglish Scenarios",
-    generateBtn: "Transform to Court-Ready Petition",
-    generatingBtn: "Drafting Official Petition via Gemini AI...",
-    
-    // Output Panel
-    tamilTab: "தமிழ் மனு (Official Tamil)",
-    englishTab: "English Petition",
-    copyBtn: "Copy Text",
-    copiedFeedback: "Copied!",
-    printBtn: "Print / A4 PDF",
-    saveToDashboardBtn: "Save to My Petitions",
-    savedSuccess: "Petition saved successfully to your dashboard!",
-    readAloudBtn: "Listen (Speech)",
+    // Nav & Bottom Bar
+    navHome: "Home",
+    navPetitions: "Petitions",
+    navNew: "New Petition",
+    navProfile: "Profile",
+    navSettings: "Settings",
 
-    // Dashboard
-    dashboardTitle: "Citizen Petition Archive",
-    dashboardSubtitle: "Track and download your administrative grievances",
-    totalPetitions: "Total Petitions",
-    searchPlaceholder: "Search petitions by department, keyword, or locality...",
-    allDepts: "All Departments",
-    noPetitions: "No petitions drafted yet",
-    noPetitionsSubtitle: "Speak or type your grievance in casual Tanglish to create your first official petition.",
-    viewA4Draft: "View A4 Draft",
-    deletePetition: "Delete",
+    // Home Screen
+    welcomeGreeting: "Vanakkam",
+    yourLocation: "Your Locality",
+    createNewPetition: "Create New Petition",
+    startPetitionDesc: "Transform your daily grievances into court-ready official petitions.",
+    startBtn: "Start Petition",
+    recentActivity: "Recent Petitions",
+    noRecentPetitions: "No petitions drafted yet.",
+    viewAllPetitions: "View All Petitions",
+    savedDrafts: "Local Drafts",
+
+    // Step Progress
+    stepIndicator: "Step {step} of 6",
+    backBtn: "Back",
+    continueBtn: "Continue",
+
+    // Step 1: About You
+    step1Title: "About You",
+    step1Subtitle: "Your verified contact information for official government records.",
+    fullName: "Full Name",
+    fullNamePlaceholder: "e.g. K. Murugan",
+    phoneNumber: "Mobile Number",
+    phoneNumberPlaceholder: "10-digit mobile number",
+    emailAddress: "Email Address",
+    residentialAddress: "Door No, Street Name & Locality",
+    residentialAddressPlaceholder: "e.g. 14/2, 4th Cross Street, KK Nagar",
+    district: "District",
+    taluk: "Taluk / Municipal Zone",
+    talukPlaceholder: "e.g. Madurai South",
+    pincode: "Postal PIN Code",
+    pincodePlaceholder: "e.g. 625020",
+
+    // Step 2: Who is this for?
+    step2Title: "Who Is This Petition For?",
+    step2Subtitle: "Specify the department or official you wish to address.",
+    dontKnowAuthority: "I don't know who to address",
+    dontKnowAuthorityHint: "Gemini AI will analyze your problem description in Step 4 and automatically assign the competent department.",
+    selectDeptLabel: "Select Department / Board",
+    recipientDesignationLabel: "Recipient Designation (Optional)",
+    recipientDesignationPlaceholder: "e.g. The Executive Engineer / Tahsildar",
+
+    // Step 3: What is your problem?
+    step3Title: "What Is Your Problem?",
+    step3Subtitle: "Explain your issue naturally in Tanglish, Tamil, or English. No government jargon needed.",
+    problemPlaceholder: "Explain naturally, e.g.: Madurai KK Nagar 4th street-la street light eriyala, 2 weeks-aa complaint panniyum aalu varala. Night time-la accidents aaguthu, udane sari panna vendugiren...",
+    voiceInput: "Tap to Speak (Tamil / Tanglish)",
+    voiceListening: "Listening... Speak naturally in Tamil or Tanglish",
+    voiceStopped: "Tap microphone to record voice",
+    charCount: "characters",
+    quickPromptCues: "Common Examples:",
+    cuePothole: "Road damaged & large potholes",
+    cueWater: "Drinking water supply interrupted",
+    cueLight: "Street light repaired & wire loose",
+    cueRation: "Ration shop delay / card issue",
+
+    // Step 4: AI Analysis & Verification
+    step4Title: "AI Authority Verification",
+    step4Subtitle: "Checking problem category, jurisdiction, and recipient suitability.",
+    analyzingText: "Gemini AI is analyzing your issue facts and jurisdiction...",
+    analysisProblemIdentified: "Identified Problem:",
+    analysisCategory: "Category:",
+    analysisLocality: "Locality:",
+    selectedRecipientLabel: "Your Selected Recipient:",
+    recommendedRecipientLabel: "AI Recommended Authority:",
+    recommendationReason: "Why this recommendation:",
+    recipientMatchSuccess: "The selected recipient is appropriate for this grievance category.",
+    recipientMismatchNotice: "The selected recipient may not be the most relevant authority for this issue.",
+    acceptRecommendationBtn: "Use Recommended Authority",
+    keepMyRecipientBtn: "Keep My Selected Recipient",
+    editRecipientBtn: "Change Authority",
+
+    // Step 5: Draft Review & Language Switcher
+    step5Title: "Review Your Petition",
+    step5Subtitle: "Review and edit the formal legal petition before generating the final PDF.",
+    petitionLanguageSwitch: "Petition Letter Language:",
+    langTamilBtn: "தமிழ் (Official Tamil)",
+    langEnglishBtn: "English (Formal English)",
+    editDraftBtn: "Edit Letter Text",
+    saveEditsBtn: "Save Changes",
+    aiPolishTools: "AI Quick Refinements:",
+    polishFormal: "Make More Formal",
+    polishConcise: "Make Concise",
+    polishUrgent: "Emphasize Urgency / Safety",
+    polishingWait: "Polishing petition with Gemini AI...",
+
+    // Step 6: PDF Generation & Export
+    step6Title: "Your Official Petition PDF",
+    step6Subtitle: "Formatted strictly to Tamil Nadu Secretariat and Collectorate standards.",
+    downloadPdfBtn: "Download PDF",
+    printBtn: "Print / Save as PDF",
+    shareBtn: "Share Document",
+    saveToDeviceBtn: "Saved to Local Archive",
+    exportBilingual: "Bilingual Package (Tamil + English)",
+    readyForSubmission: "Court-Ready & CM Special Cell Compliant",
+
+    // Settings & Privacy
+    settingsTitle: "Privacy & Data Settings",
+    settingsSubtitle: "Your petition content is stored strictly on your local device.",
+    localRecordsCount: "Stored Local Petitions:",
+    exportJsonBtn: "Export My Petitions (JSON Backup)",
+    clearAllDataBtn: "Wipe Local Data & Cache",
+    clearDataConfirm: "Are you sure? This will delete all locally stored petitions and drafts on this device.",
+    dataClearedSuccess: "All local petition data has been wiped.",
+    privacyNote: "Manu does not transmit or monetize your private grievance text to external training sets. AI processing is performed securely via server-side Google GenAI.",
+    logoutBtn: "Sign Out",
   },
   ta: {
-    // Brand & Header
-    brandTitle: "மனு (Manu)",
-    brandSubtitle: "தமிழ்நாடு அரசு பொதுக் குறைதீர்ப்பு வரைவாளர்",
-    home: "முகப்பு",
-    dashboard: "என் மனுக்கள்",
-    newPetition: "+ புதிய மனு",
-    login: "குடிமக்கள் உள்நுழைவு",
-    signup: "பதிவு செய்க",
-    logout: "வெளியேறு",
-    demoLogin: "முன்மாதிரி குடிமகன்",
+    // App & Identity
+    appName: "மனு",
+    appTamilName: "மனு (Manu)",
+    appTagline: "குடிமக்கள் மனு உதவியாளர்",
+    govHeader: "தமிழ்நாடு அரசு",
+    govTamilHeader: "தமிழ்நாடு அரசு",
+    taglineSubtitle: "உருவாக்கு • சரிபார் • பதிவிறக்கு • சமர்ப்பி",
+    getStarted: "தொடங்குங்கள்",
+    continueWithGoogle: "கூகுள் மூலம் தொடரவும்",
+    guestMode: "விருந்தினர் குடிமகனாக தொடர்க",
+    loginSubtitle: "உங்கள் மனுக்களை உள்ளூரில் நிர்வகிக்க மற்றும் தகவல்களை நிரப்ப பாதுகாப்பாக இணையுங்கள்.",
 
-    // Hero & Landing
-    heroBadge: "தமிழ்நாடு தலைமைச் செயலகம் & ஆட்சியர் குறைதீர்ப்பு நெறிமுறை • Gemini 3.8 Flash",
-    heroTitlePart1: "Tanglish-ல் பேசுங்கள்.",
-    heroTitlePart2: "அதிகாரப்பூர்வ அரசு மனுவை உடனே பெறுங்கள்.",
-    heroSubtitle: "உங்கள் தெரு மற்றும் ஊர் பிரச்சனைகளை இயல்பாக Tanglish அல்லது தமிழில் சொல்லுங்கள். தலைமைச் செயலகம் மற்றும் மாவட்ட ஆட்சியர் ஏற்கும் முறையான மனுவாக நொடியில் மாற்றுகிறோம்.",
-    startPetitionBtn: "இப்போதே மனு எழுத தொடங்குங்கள்",
-    exploreDeptsBtn: "42+ அரசுத் துறைகளை காண்க",
-    districtsBadge: "38 தமிழக மாவட்டங்கள் தயார்",
-    dualFormatBadge: "இருமொழி மனு (தமிழ் & English)",
-    eSevaiBadge: "முதல்வர் தனிப்பிரிவு & ஆட்சியர் குறைதீர்ப்பு",
+    // Location Permission
+    locationTitle: "இருப்பிட அனுமதி",
+    locationDesc: "உங்கள் மாவட்டம் மற்றும் தாலுகாவை கண்டறிந்து உரிய அரசு அதிகாரியை பரிந்துரைக்க இருப்பிட அனுமதி உதவுகிறது.",
+    allowLocationBtn: "இருப்பிடத்தை கண்டறிய அனுமதி",
+    skipLocationBtn: "கைமுறையாக உள்ளிடவும்",
+    detectingLocation: "உங்கள் தமிழக இருப்பிடம் கண்டறியப்படுகிறது...",
+    locationDetected: "இருப்பிடம் கண்டறியப்பட்டது",
+    locationManualNotice: "இருப்பிட அனுமதி மறுக்கப்பட்டது. நீங்கள் நேரடியாக மாவட்டத்தை தேர்ந்தெடுக்கலாம்.",
 
-    // Live Sample
-    liveSampleTitle: "நேரடி Tanglish மாற்ற மாதிரி",
-    interactiveSample: "நேரடி செயல்முறை",
-    spokenTanglishHeader: "பொதுமக்கள் இயல்பாக பேசிய Tanglish",
-    aiBridgeLabel: "செயற்கை நுண்ணறிவு சட்ட வரைவு",
-    outputCardTitle: "தமிழ்நாடு அரசு பொதுக் குறைதீர்ப்பு மனு",
-    viewFullA4Btn: "முழு A4 மனுவை காண்க",
+    // Nav & Bottom Bar
+    navHome: "முகப்பு",
+    navPetitions: "மனுக்கள்",
+    navNew: "+ புதிய மனு",
+    navProfile: "சுயவிவரம்",
+    navSettings: "அமைப்புகள்",
 
-    // Departments
-    readyDepartmentsTitle: "முக்கிய அரசுத் துறைகள்",
-    viewAllDepts: "அனைத்து துறைகளும்",
+    // Home Screen
+    welcomeGreeting: "வணக்கம்",
+    yourLocation: "உங்கள் பகுதி",
+    createNewPetition: "புதிய மனு எழுதுங்கள்",
+    startPetitionDesc: "உங்கள் ஊர் பிரச்சனைகளை அரசு ஏற்கும் முறையான மனுவாக நொடியில் மாற்றவும்.",
+    startBtn: "மனு தொடங்கு",
+    recentActivity: "சமீபத்திய மனுக்கள்",
+    noRecentPetitions: "இதுவரை மனுக்கள் உருவாக்கப்படவில்லை.",
+    viewAllPetitions: "அனைத்து மனுக்களையும் காண்க",
+    savedDrafts: "உள்ளூர் வரைவுகள்",
 
-    // Create Workspace
-    workspaceTitle: "அதிகாரப்பூர்வ மனு எழுதும் களம்",
-    workspaceSubtitle: "இயல்பான பேச்சு மொழியை அரசு முத்திரையுடன் கூடிய விண்ணப்பமாக மாற்றும் தளம்",
-    applicantDetails: "மனுதாரர் & பிரச்சனை விவரங்கள்",
-    applicantNameLabel: "மனுதாரர் பெயர்",
-    phoneLabel: "தொடர்பு தொலைபேசி எண்",
-    districtLabel: "மாவட்டம் தேர்ந்தெடுக்கவும்",
-    deptLabel: "சம்பந்தப்பட்ட அரசுத் துறை",
-    addressLabel: "முழு இருப்பிட முகவரி (கதவு எண், தெரு, தாலுகா - அஞ்சல் குறியீடு)",
-    tanglishInputLabel: "பிரச்சனையின் முழு விவரம் (Tanglish / தமிழ்)",
-    voiceDictationLabel: "குரல் வழி தட்டச்சு",
-    quickScenariosLabel: "உடனடி மாதிரி பிரச்சனைகள்",
-    generateBtn: "அரசு மனுவாக உடனே மாற்று",
-    generatingBtn: "மனு உருவாக்கம் நடைபெறுகிறது...",
+    // Step Progress
+    stepIndicator: "படி {step} / 6",
+    backBtn: "பின்செல்",
+    continueBtn: "தொடர்க",
 
-    // Output Panel
-    tamilTab: "தமிழ் மனு",
-    englishTab: "ஆங்கில மனு (English)",
-    copyBtn: "நகலெடு",
-    copiedFeedback: "நகலெடுக்கப்பட்டது!",
-    printBtn: "அச்சிடு / A4 PDF",
-    saveToDashboardBtn: "மனுவை சேமிக்க",
-    savedSuccess: "மனு வெற்றிகரமாக உங்கள் பட்டியலில் சேமிக்கப்பட்டது!",
-    readAloudBtn: "வாசித்து கேட்க",
+    // Step 1: About You
+    step1Title: "உங்களைப் பற்றி",
+    step1Subtitle: "அரசு ஆவணங்களில் இடம்பெற வேண்டிய மனுதாரர் தொடர்பு விவரங்கள்.",
+    fullName: "முழுப் பெயர்",
+    fullNamePlaceholder: "எ.கா. கா. முருகன்",
+    phoneNumber: "கைபேசி எண்",
+    phoneNumberPlaceholder: "10-இலக்க கைபேசி எண்",
+    emailAddress: "மின்னஞ்சல் முகவரி",
+    residentialAddress: "கதவு எண், தெரு மற்றும் பகுதி",
+    residentialAddressPlaceholder: "எ.கா. 14/2, 4-வது குறுக்குத் தெரு, கே.கே. நகர்",
+    district: "மாவட்டம்",
+    taluk: "வட்டம் / தாலுகா / மண்டலம்",
+    talukPlaceholder: "எ.கா. மதுரை தெற்கு",
+    pincode: "அஞ்சல் குறியீட்டு எண்",
+    pincodePlaceholder: "எ.கா. 625020",
 
-    // Dashboard
-    dashboardTitle: "மனுக்கள் காப்பகம்",
-    dashboardSubtitle: "நீங்கள் தயாரித்த அனைத்து அரசு மனுக்களின் தொகுப்பு",
-    totalPetitions: "மொத்த மனுக்கள்",
-    searchPlaceholder: "துறை, ஊர் அல்லது குறிப்பு எண் கொண்டு தேடுங்கள்...",
-    allDepts: "அனைத்து துறைகள்",
-    noPetitions: "இன்னும் மனுக்கள் உருவாக்கப்படவில்லை",
-    noPetitionsSubtitle: "உங்கள் முதல் மனுவை உருவாக்க 'புதிய மனு' பொத்தானை அழுத்தவும்.",
-    viewA4Draft: "மனுவை காண்க",
-    deletePetition: "நீக்கு",
+    // Step 2: Who is this for?
+    step2Title: "மனு யாருக்கானது?",
+    step2Subtitle: "நீங்கள் மனு அளிக்க விரும்பும் அரசுத் துறை அல்லது அதிகாரியை குறிப்பிடவும்.",
+    dontKnowAuthority: "யாருக்கு மனு அளிக்க வேண்டும் என்று தெரியவில்லை",
+    dontKnowAuthorityHint: "பிரச்சனையின் தன்மையை ஆய்வு செய்து சரியான துறை மற்றும் அதிகாரியை AI தானே பரிந்துரைக்கும்.",
+    selectDeptLabel: "அரசுத் துறை / வாரியம்",
+    recipientDesignationLabel: "அதிகாரியின் பதவிப் பெயர் (விருப்பத்திற்குரியது)",
+    recipientDesignationPlaceholder: "எ.கா. உதவி செயற்பொறியாளர் / வட்டாட்சியர்",
+
+    // Step 3: What is your problem?
+    step3Title: "உங்கள் பிரச்சனை என்ன?",
+    step3Subtitle: "உங்கள் குறைபாட்டை Tanglish அல்லது எளிய தமிழில் விளக்குங்கள். அரசு கடித நடை தேவையில்லை.",
+    problemPlaceholder: "இயல்பாக சொல்லுங்கள்: மதுரை கேகே நகர் 4வது தெருவில் தெருவிளக்கு எரியவில்லை, கம்பியில் வயர் தொங்குகிறது. புகார் அளித்தும் நடவடிக்கை இல்லை, விபத்து ஏற்படும் அபாயம் உள்ளது...",
+    voiceInput: "பேசி உள்ளிடவும் (குரல் வழி)",
+    voiceListening: "கேட்கிறது... தமிழில் அல்லது Tanglish-ல் இயல்பாக பேசுங்கள்",
+    voiceStopped: "மைக் குறியீட்டை அழுத்தி பேசவும்",
+    charCount: "எழுத்துக்கள்",
+    quickPromptCues: "மாதிரி பிரச்சனைகள்:",
+    cuePothole: "சாலை பழுதடைந்து குண்டும் குழியுமாக உள்ளது",
+    cueWater: "குடிநீர் விநியோகம் தடைபட்டுள்ளது",
+    cueLight: "தெருவிளக்கு பழுது & மின்கம்பி தொங்குகிறது",
+    cueRation: "ரேஷன் கடை பொருள் விநியோக தாமதம்",
+
+    // Step 4: AI Analysis & Verification
+    step4Title: "AI அதிகார வரம்பு சரிபார்ப்பு",
+    step4Subtitle: "பிரச்சனை வகை, ஊர் வரம்பு மற்றும் அதிகாரியின் பொருத்தம் ஆய்வு செய்யப்படுகிறது.",
+    analyzingText: "பிரச்சனை விவரங்களையும் துறை வரம்பையும் Gemini AI ஆய்வு செய்கிறது...",
+    analysisProblemIdentified: "கண்டறியப்பட்ட பிரச்சனை:",
+    analysisCategory: "துறை வகை:",
+    analysisLocality: "இருப்பிடம்:",
+    selectedRecipientLabel: "நீங்கள் தேர்வு செய்த அதிகாரி:",
+    recommendedRecipientLabel: "AI பரிந்துரைக்கும் தகுதியான அதிகாரி:",
+    recommendationReason: "பரிந்துரைக்கான காரணம்:",
+    recipientMatchSuccess: "நீங்கள் தேர்வு செய்த அதிகாரி இந்த பிரச்சனைக்கு முற்றிலும் பொருத்தமானவர்.",
+    recipientMismatchNotice: "நீங்கள் தேர்வு செய்த அதிகாரி இந்த பிரச்சனைக்கு நேரடி பொறுப்புடையவர் அல்ல.",
+    acceptRecommendationBtn: "பரிந்துரைக்கப்பட்ட அதிகாரியை ஏற்கவும்",
+    keepMyRecipientBtn: "நான் தேர்வு செய்த அதிகாரியையே வைக்கவும்",
+    editRecipientBtn: "அதிகாரியை மாற்று",
+
+    // Step 5: Draft Review & Language Switcher
+    step5Title: "மனுவை சரிபார்க்கவும்",
+    step5Subtitle: "இறுதி PDF உருவாக்குவதற்கு முன் அரசு மனுவின் விவரங்களை சரிபார்த்து திருத்தவும்.",
+    petitionLanguageSwitch: "மனு கடித மொழி:",
+    langTamilBtn: "தமிழ் மனு (Official Tamil)",
+    langEnglishBtn: "ஆங்கில மனு (Formal English)",
+    editDraftBtn: "மனு உரையை திருத்தவும்",
+    saveEditsBtn: "மாற்றங்களை சேமிக்க",
+    aiPolishTools: "AI விரைவு மெருகூட்டல்:",
+    polishFormal: "சட்ட நடை அதிகப்படுத்து",
+    polishConcise: "சுருக்கமாக்கு",
+    polishUrgent: "அவசரம் / அபாயத்தை முன்னிலைப்படுத்து",
+    polishingWait: "மனுவை Gemini AI மெருகூட்டுகிறது...",
+
+    // Step 6: PDF Generation & Export
+    step6Title: "உங்கள் அதிகாரப்பூர்வ மனு PDF",
+    step6Subtitle: "தமிழ்நாடு தலைமைச் செயலகம் மற்றும் மாவட்ட ஆட்சியர் அலுவலக நெறிமுறைப்படி உருவானது.",
+    downloadPdfBtn: "PDF பதிவிறக்கம்",
+    printBtn: "அச்சிடு / PDF சேமி",
+    shareBtn: "பகிர்வு செய்க",
+    saveToDeviceBtn: "உள்ளூர் காப்பகத்தில் சேமிக்கப்பட்டது",
+    exportBilingual: "இருமொழி தொகுப்பு (தமிழ் + ஆங்கிலம்)",
+    readyForSubmission: "முதல்வர் தனிப்பிரிவு & ஆட்சியர் அலுவலகத்தில் சமர்ப்பிக்க தயார்",
+
+    // Settings & Privacy
+    settingsTitle: "தனியுரிமை & அமைப்புகள்",
+    settingsSubtitle: "உங்கள் மனு விவரங்கள் உங்கள் தொலைபேசி/உலாவியில் மட்டுமே ரகசியமாக சேமிக்கப்படுகிறது.",
+    localRecordsCount: "சேமிக்கப்பட்ட மனுக்கள்:",
+    exportJsonBtn: "மனுக்களை காப்புப் பிரதி எடுக்க (JSON Export)",
+    clearAllDataBtn: "உள்ளூர் தரவுகளை அழிக்க",
+    clearDataConfirm: "நிச்சயமாகவா? இந்த சாதனத்தில் உள்ள அனைத்து மனுக்களும் நிரந்தரமாக நீக்கப்படும்.",
+    dataClearedSuccess: "அனைத்து உள்ளூர் தரவுகளும் அழிக்கப்பட்டன.",
+    privacyNote: "மனு தளம் உங்கள் அந்தரங்க தகவல்களை பொது AI பயிற்சிக்கு அனுப்பாது. Google GenAI மூலம் தனிப்பட்ட முறையில் மட்டுமே செயலாக்கப்படுகிறது.",
+    logoutBtn: "வெளியேறு",
   }
 };
 
@@ -158,12 +286,12 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 
 export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [language, setLanguageState] = useState<Language>(() => {
-    return (localStorage.getItem('manu_language_pref') as Language) || 'ta';
+    return (localStorage.getItem('manu_mobile_lang') as Language) || 'ta';
   });
 
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);
-    localStorage.setItem('manu_language_pref', lang);
+    localStorage.setItem('manu_mobile_lang', lang);
   };
 
   const toggleLanguage = () => {
