@@ -18,18 +18,22 @@ import {
   serverTimestamp,
   Firestore,
   Timestamp,
-  orderBy
+  orderBy,
+  doc,
+  setDoc
 } from 'firebase/firestore';
 
-// Default / fallback Firebase configuration
-// Can be customized with VITE_FIREBASE_* environment variables or live config
+import { getAnalytics, isSupported } from 'firebase/analytics';
+
+// Firebase configuration for manu-2793e
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "AIzaSyDemoManuTamilNaduPetitionKey99",
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "manu-tn-petitions.firebaseapp.com",
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "manu-tn-petitions",
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "manu-tn-petitions.appspot.com",
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "102938475612",
-  appId: import.meta.env.VITE_FIREBASE_APP_ID || "1:102938475612:web:9876543210ab"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "AIzaSyCeVvxMufITCXwRnxvxO6UP0ou-c2JIKPQ",
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "manu-2793e.firebaseapp.com",
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "manu-2793e",
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "manu-2793e.firebasestorage.app",
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "611883868671",
+  appId: import.meta.env.VITE_FIREBASE_APP_ID || "1:611883868671:web:067303f40b914594f687ca",
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || "G-3N57P7N93Z"
 };
 
 let app: FirebaseApp;
@@ -41,6 +45,16 @@ if (!getApps().length) {
 
 export const auth: Auth = getAuth(app);
 export const db: Firestore = getFirestore(app);
+
+// Initialize Analytics when in browser environment
+export let analytics: any = null;
+if (typeof window !== 'undefined') {
+  isSupported().then((supported) => {
+    if (supported) {
+      analytics = getAnalytics(app);
+    }
+  }).catch(() => {});
+}
 
 export interface PetitionDocument {
   id?: string;
@@ -150,5 +164,23 @@ export async function getUserPetitionsFromFirestore(userId: string): Promise<Pet
     return local.filter((p: PetitionDocument) => p.userId === userId || !p.userId || userId === 'demo-citizen');
   } catch (err) {
     return [];
+  }
+}
+
+/**
+ * Persists authenticated user profile to Firestore 'users' collection
+ */
+export async function syncUserToFirestore(userData: { uid: string; email: string | null; displayName?: string | null; photoURL?: string | null }): Promise<void> {
+  try {
+    const userRef = doc(db, 'users', userData.uid);
+    await setDoc(userRef, {
+      uid: userData.uid,
+      email: userData.email,
+      displayName: userData.displayName || null,
+      photoURL: userData.photoURL || null,
+      lastLogin: serverTimestamp(),
+    }, { merge: true });
+  } catch (err) {
+    console.warn("Firestore syncUser notice:", err);
   }
 }

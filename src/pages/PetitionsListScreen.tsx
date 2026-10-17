@@ -62,23 +62,23 @@ export const PetitionsListScreen: React.FC = () => {
   });
 
   return (
-    <div className="flex-1 p-4 space-y-4 pb-20 select-none">
+    <div className="flex-1 p-4 sm:p-6 lg:p-8 space-y-5 select-none">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="font-display-serif text-lg font-bold text-slate-900">
+          <h2 className="font-display-serif text-xl sm:text-2xl font-bold text-slate-900">
             {t('navPetitions')}
           </h2>
           <p className="text-xs text-slate-500">
-            {petitions.length} {language === 'ta' ? 'உள்ளூர் மனுக்கள்' : 'saved locally'}
+            {petitions.length} {language === 'ta' ? 'சேமிக்கப்பட்ட மனுக்கள்' : 'saved offline drafts'}
           </p>
         </div>
 
         <button
           onClick={() => navigate('/wizard')}
-          className="flex items-center gap-1.5 civic-gradient-header text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow-sm active:scale-95 transition-transform min-h-[36px]"
+          className="flex items-center gap-1.5 civic-gradient-header text-white px-4 py-2 rounded-xl text-xs font-bold shadow-sm active:scale-95 transition-transform min-h-[36px] cursor-pointer"
         >
-          <PlusCircle className="w-3.5 h-3.5" />
+          <PlusCircle className="w-4 h-4" />
           <span>{t('navNew')}</span>
         </button>
       </div>
@@ -91,40 +91,40 @@ export const PetitionsListScreen: React.FC = () => {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           placeholder={language === 'ta' ? 'மனு எண் அல்லது துறை கொண்டு தேடுங்கள்...' : 'Search by reference, dept, or district...'}
-          className="mobile-input pl-9 text-xs"
+          className="mobile-input pl-9 text-xs sm:text-sm py-2.5"
         />
         {searchTerm && (
           <button
             onClick={() => setSearchTerm('')}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 p-1"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 p-1 cursor-pointer"
           >
-            <X className="w-3.5 h-3.5" />
+            <X className="w-4 h-4" />
           </button>
         )}
       </div>
 
       {/* Petitions List */}
       {filteredPetitions.length === 0 ? (
-        <div className="p-8 text-center bg-white rounded-2xl border border-slate-200 space-y-3">
-          <FileText className="w-10 h-10 text-slate-300 mx-auto" />
-          <h4 className="font-bold text-sm text-slate-800">
+        <div className="p-8 sm:p-12 text-center bg-white rounded-2xl border border-slate-200 space-y-3 shadow-xs">
+          <FileText className="w-12 h-12 text-slate-300 mx-auto" />
+          <h4 className="font-bold text-base text-slate-800">
             {searchTerm ? (language === 'ta' ? 'மனுக்கள் ஏதும் பொருந்தவில்லை' : 'No matching petitions found') : t('noRecentPetitions')}
           </h4>
-          <p className="text-xs text-slate-500 max-w-xs mx-auto">
+          <p className="text-xs text-slate-500 max-w-sm mx-auto">
             {language === 'ta'
               ? 'உங்கள் குறைபாடுகளை மனுவாக மாற்றி அரசுக்கு சமர்ப்பிக்க இப்போதே தொடங்குங்கள்.'
-              : 'Create court-ready petitions in minutes and keep offline copies on your phone.'}
+              : 'Create court-ready petitions in minutes and keep offline copies on your device.'}
           </p>
           <button
             onClick={() => navigate('/wizard')}
-            className="mt-2 inline-flex items-center gap-1.5 civic-gradient-header text-white px-4 py-2 rounded-xl text-xs font-bold shadow-md"
+            className="mt-2 inline-flex items-center gap-2 civic-gradient-header text-white px-5 py-2.5 rounded-xl text-xs font-bold shadow-md cursor-pointer"
           >
             <PlusCircle className="w-4 h-4" />
             <span>{t('createNewPetition')}</span>
           </button>
         </div>
       ) : (
-        <div className="space-y-2.5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
           {filteredPetitions.map((p) => (
             <div
               key={p.id}
@@ -177,8 +177,8 @@ export const PetitionsListScreen: React.FC = () => {
 
       {/* Selected Petition Inspection Drawer / Modal */}
       {selectedPetition && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 animate-fadeIn">
-          <div className="bg-white w-full sm:max-w-md rounded-t-3xl sm:rounded-2xl p-5 space-y-4 max-h-[85vh] flex flex-col">
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 animate-fadeIn">
+          <div className="bg-white/90 backdrop-blur-2xl w-full sm:max-w-md rounded-t-3xl sm:rounded-2xl p-5 space-y-4 max-h-[85vh] flex flex-col shadow-2xl border border-white/80">
             <div className="flex items-center justify-between border-b pb-2">
               <div>
                 <span className="text-[10px] font-mono font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
@@ -191,14 +191,14 @@ export const PetitionsListScreen: React.FC = () => {
 
               <button
                 onClick={() => setSelectedPetition(null)}
-                className="text-slate-400 hover:text-slate-700 p-1.5"
+                className="text-slate-400 hover:text-slate-700 p-1.5 cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             {/* Content Preview */}
-            <div className="overflow-y-auto space-y-3 flex-1 pr-1 text-xs text-slate-700 font-serif leading-relaxed bg-slate-50 p-3 rounded-xl border border-slate-200">
+            <div className="overflow-y-auto space-y-3 flex-1 pr-1 text-xs text-slate-700 font-serif leading-relaxed bg-white/70 backdrop-blur-md p-3 rounded-xl border border-white/80">
               <div className="border-b pb-2 font-sans font-semibold text-slate-900 text-[11px]">
                 {language === 'ta' ? selectedPetition.tamilOutput.subject : selectedPetition.englishOutput.subject}
               </div>

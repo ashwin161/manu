@@ -7,7 +7,7 @@ import {
   GoogleAuthProvider,
   signInWithPopup
 } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
+import { auth, syncUserToFirestore } from '@/lib/firebase';
 
 export interface AppUser {
   uid: string;
@@ -41,13 +41,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const saved = localStorage.getItem(LOCAL_USER_KEY);
     if (saved) {
       try {
-        setUser(JSON.parse(saved));
+        const parsed = JSON.parse(saved);
+        if (parsed?.uid) {
+          setUser(parsed);
+        }
       } catch (e) {
         // ignore
       }
     }
 
-    // Subscribe to Firebase Auth state
+    // Subscribe to real Firebase Auth state
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       if (firebaseUser) {
         const u: AppUser = {
@@ -58,12 +61,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         };
         setUser(u);
         localStorage.setItem(LOCAL_USER_KEY, JSON.stringify(u));
+        syncUserToFirestore(u).catch(() => {});
       } else {
         const existing = localStorage.getItem(LOCAL_USER_KEY);
         if (existing) {
           try {
             const parsed = JSON.parse(existing);
-            if (parsed.uid?.startsWith('guest-') || parsed.uid?.startsWith('demo-') || parsed.uid?.startsWith('google-')) {
+            // Only keep explicit guest sessions if unauthenticated with Firebase
+            if (parsed.uid?.startsWith('guest-')) {
               setUser(parsed);
               setLoading(false);
               return;
@@ -84,6 +89,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const signInWithGoogle = async () => {
     try {
       const provider = new GoogleAuthProvider();
+      provider.setCustomParameters({ prompt: 'select_account' });
       const res = await signInWithPopup(auth, provider);
       const u: AppUser = {
         uid: res.user.uid,
@@ -93,18 +99,22 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       };
       setUser(u);
       localStorage.setItem(LOCAL_USER_KEY, JSON.stringify(u));
+      await syncUserToFirestore(u);
     } catch (err: any) {
-      console.warn("Google signInPopup notice (using secure local guest session fallback for sandbox environment):", err);
-      // In sandboxed iframes where popups are blocked or Firebase client credentials are not activated,
-      // fallback to a clean Google citizen session so the user flow is uninterrupted.
-      const u: AppUser = {
-        uid: 'google-citizen-' + Math.random().toString(36).slice(2, 8),
-        email: 'citizen@tamilnadu.gov.in',
-        displayName: 'K. Murugan',
-        photoURL: null,
-      };
-      setUser(u);
-      localStorage.setItem(LOCAL_USER_KEY, JSON.stringify(u));
+      console.error("Firebase Google Sign-In error:", err);
+      let userFriendlyMsg = "Google Sign-In failed.";
+      if (err.code === 'auth/operation-not-allowed') {
+        userFriendlyMsg = "Google Sign-In provider is disabled in Firebase. Enable it at: Firebase Console -> Authentication -> Sign-in method -> Google -> Enable and Save.";
+      } else if (err.code === 'auth/popup-closed-by-user') {
+        userFriendlyMsg = "Sign-in cancelled (popup was closed).";
+      } else if (err.code === 'auth/unauthorized-domain') {
+        userFriendlyMsg = `Domain (${window.location.hostname}) is not authorized in Firebase Console. Please add '${window.location.hostname}' to Firebase Console -> Authentication -> Settings -> Authorized domains.`;
+      } else if (err.code === 'auth/popup-blocked') {
+        userFriendlyMsg = "Browser popup was blocked. Please allow popups for this site.";
+      } else if (err.message) {
+        userFriendlyMsg = err.message;
+      }
+      throw new Error(userFriendlyMsg);
     }
   };
 
@@ -130,15 +140,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       };
       setUser(u);
       localStorage.setItem(LOCAL_USER_KEY, JSON.stringify(u));
+      await syncUserToFirestore(u);
     } catch (err: any) {
-      console.warn("Firebase Auth signIn notice:", err?.message || err);
-      const u: AppUser = {
-        uid: 'usr_' + btoa(email).slice(0, 10),
-        email: email,
-        displayName: email.split('@')[0],
-      };
-      setUser(u);
-      localStorage.setItem(LOCAL_USER_KEY, JSON.stringify(u));
+      console.error("Firebase Auth signIn error:", err);
+      throw err;
     }
   };
 
@@ -153,15 +158,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       };
       setUser(u);
       localStorage.setItem(LOCAL_USER_KEY, JSON.stringify(u));
+      await syncUserToFirestore(u);
     } catch (err: any) {
-      console.warn("Firebase Auth createUser notice:", err?.message || err);
-      const u: AppUser = {
-        uid: 'usr_' + btoa(email).slice(0, 10),
-        email: email,
-        displayName: email.split('@')[0],
-      };
-      setUser(u);
-      localStorage.setItem(LOCAL_USER_KEY, JSON.stringify(u));
+      console.error("Firebase Auth createUser error:", err);
+      throw err;
     }
   };
 

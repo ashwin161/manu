@@ -59,7 +59,7 @@ export const SettingsScreen: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 p-4 space-y-4 pb-20 select-none">
+    <div className="flex-1 p-4 sm:p-6 lg:p-8 space-y-6 max-w-4xl mx-auto w-full select-none">
       {/* Header */}
       <div>
         <h2 className="font-display-serif text-lg font-bold text-slate-900">
@@ -71,7 +71,7 @@ export const SettingsScreen: React.FC = () => {
       </div>
 
       {/* Account Info Pill */}
-      <div className="p-3.5 bg-white rounded-2xl border border-slate-200 flex items-center justify-between shadow-sm">
+      <div className="p-3.5 bg-white/70 backdrop-blur-xl rounded-2xl border border-white/80 flex items-center justify-between shadow-sm">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full civic-gradient-header text-white flex items-center justify-center font-bold text-sm">
             {(user?.displayName || user?.email || 'C')[0].toUpperCase()}
@@ -88,7 +88,7 @@ export const SettingsScreen: React.FC = () => {
 
         <button
           onClick={handleSignOut}
-          className="text-xs font-bold text-rose-600 hover:text-rose-700 flex items-center gap-1 p-2 rounded-lg hover:bg-rose-50"
+          className="text-xs font-bold text-rose-600 hover:text-rose-700 flex items-center gap-1 p-2 rounded-lg hover:bg-rose-50 cursor-pointer"
         >
           <LogOut className="w-3.5 h-3.5" />
           <span>{t('logoutBtn')}</span>
@@ -96,7 +96,7 @@ export const SettingsScreen: React.FC = () => {
       </div>
 
       {/* App Language Selector */}
-      <div className="p-4 bg-white rounded-2xl border border-slate-200 space-y-2">
+      <div className="p-4 bg-white/70 backdrop-blur-xl rounded-2xl border border-white/80 space-y-2">
         <label className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
           <Languages className="w-4 h-4 text-emerald-700" />
           <span>{language === 'ta' ? 'பயன்பாட்டு மொழி (App Language)' : 'Application Language'}</span>
@@ -128,7 +128,7 @@ export const SettingsScreen: React.FC = () => {
       </div>
 
       {/* Citizen Profile Information */}
-      <form onSubmit={handleSaveProfile} className="p-4 bg-white rounded-2xl border border-slate-200 space-y-3">
+      <form onSubmit={handleSaveProfile} className="p-4 bg-white/70 backdrop-blur-xl rounded-2xl border border-white/80 space-y-3">
         <div className="flex items-center justify-between pb-1 border-b">
           <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">
             {language === 'ta' ? 'மனுதாரர் நிலையான விவரங்கள்' : 'Default Petitioner Details'}
@@ -219,7 +219,7 @@ export const SettingsScreen: React.FC = () => {
       </form>
 
       {/* Privacy-First Local Storage Controls */}
-      <div className="p-4 bg-white rounded-2xl border border-slate-200 space-y-3">
+      <div className="p-4 bg-white/70 backdrop-blur-xl rounded-2xl border border-white/80 space-y-3">
         <div className="flex items-center justify-between pb-1 border-b">
           <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">
             {language === 'ta' ? 'தனியுரிமை & உள்ளூர் தரவு' : 'Privacy & Local Data'}

@@ -80,9 +80,9 @@ export const WizardContainer: React.FC = () => {
   const stepTitlesTa = ['தகவல்கள்', 'அதிகாரி', 'பிரச்சனை', 'சரிபார்ப்பு', 'மனு வரைவு', 'PDF'];
 
   return (
-    <div className="flex-1 flex flex-col bg-slate-50 select-none">
+    <div className="flex-1 flex flex-col bg-transparent select-none">
       {/* Wizard Step Top Bar */}
-      <div className="bg-white border-b border-slate-200 px-4 py-3 shrink-0 shadow-sm sticky top-0 z-30">
+      <div className="bg-white/75 backdrop-blur-xl border-b border-white/70 px-4 py-3 shrink-0 shadow-sm sticky top-0 z-30">
         <div className="flex items-center justify-between mb-2">
           <button
             onClick={handleBack}
@@ -136,7 +136,7 @@ export const WizardContainer: React.FC = () => {
       </div>
 
       {/* Step Body Content */}
-      <div className="flex-1 p-4 overflow-y-auto">
+      <div className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto max-w-4xl mx-auto w-full">
         {step === 1 && (
           <Step1AboutYou
             data={formData}

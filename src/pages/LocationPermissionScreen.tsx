@@ -93,7 +93,7 @@ export const LocationPermissionScreen: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 flex flex-col justify-between p-6 bg-slate-50 text-slate-900 select-none">
+    <div className="flex-1 flex flex-col justify-between p-6 sm:p-10 max-w-xl mx-auto w-full text-slate-900 select-none">
       {/* Top Header */}
       <div>
         <div className="w-16 h-16 rounded-2xl civic-gradient-subtle border border-emerald-200 flex items-center justify-center text-emerald-700 mx-auto mb-6 shadow-sm">
